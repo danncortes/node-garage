@@ -1,17 +1,31 @@
-const command = process.argv[2];
+const yargs = require('yargs');
+const args = yargs.argv;
+const command = args._[0];
+
+const notes = require('./notes.js');
 
 if(command === 'list'){
-    console.log('Listing....')
+    notes.getAll();
 }
 else if(command === 'add'){
-    console.log('Adding....')   
+    var note = notes.addNote(args.title, args.body); 
+    if(note){
+        console.log('Note added!', note);
+    }
+    else{
+        console.log('ERROR: Duplicated note!');
+    }
 }
-else if(command === 'read'){
-    console.log('Reading...')
+else if(command === 'read'){ 
+    notes.getNote(args.title)
 }
 else if(command === 'remove'){
-    console.log('Removing...')
-}
-else{
-    console.log('Command not found!')
+    var noteRemoved = notes.removeNote(args.title);
+
+    if(noteRemoved){
+        console.log('Note Removed')
+    }
+    else{
+        console.log('Note not found')
+    }
 }
