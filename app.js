@@ -26,8 +26,8 @@
 //     commands[command]();
 // }
 
-const testCommands = require('./commands');
-testCommands()
+const {commandModule} = require('./commands');
+commandModule.runCommand();
 
 //const notes = require('./notes.js');
 
