@@ -1,8 +1,35 @@
-const yargs = require('yargs');
-const args = yargs.argv;
-const command = args._[0];
+// const yargs = require('yargs');
+// const args = yargs
+//     .command('run-test', 'Run test through API request', {
+//         machine:{
+//             describe: 'Machine\'s serial number which against is going to be run the test',
+//             demand: true,
+//             alias: 'm'
+//         },
+//         testname:{
+//             describe: 'Test name what is going to be run on the machine ',
+//             demand: true,
+//             alias: 't'
+//         }
+//     })
+//     .help()
+//     .argv;
+// const command = args._[0];
 
-const notes = require('./notes.js');
+// const commands = {
+//     "run-test": function(){
+//         console.log('Running!', command)
+//     }
+// }
+
+// if(command && commands.hasOwnProperty(command)){
+//     commands[command]();
+// }
+
+const testCommands = require('./commands');
+testCommands()
+
+//const notes = require('./notes.js');
 
 // if(command === 'list'){
 //     notes.getAll();
@@ -30,17 +57,3 @@ const notes = require('./notes.js');
 //     }
 // }
 
-
-const commands = {
-    "run-test": function(){
-        if(!args.machine || !args.test){
-            console.log('Error: Machine serial or test name are missing!');
-        }else{
-            
-        }
-    }
-}
-
-if(command){
-    commands[command]();
-}
