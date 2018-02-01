@@ -1,5 +1,6 @@
 const yargs = require('yargs');
 const http = require('http');
+const fs = require('fs');
 
 const args = yargs
     .command('run-test', 'Run test through API request', {
@@ -22,22 +23,31 @@ const args = yargs
 
 const command = args._[0];
 
-const API_URL = 'http://api.tripxpense.com/:testname/:serial'
+const API_URL_TEST = 'http://api.tripxpense.com/:testname/:serial'
 
 function testUrlBuilder(serial, testname, endpoint){
     return endpoint.replace(":serial", serial).replace(":testname", testname);
 }
 
-function listTests(){
-    const list = [
-        'example',
-        'blue_button_led_testing'
-    ];
-    console.log(list);
+function listTests() {
+
+    const testFolder = './tests/';
+    fs.readdir(testFolder, (err, files) => {
+        var regexp = new RegExp("\.js+$", 'g');
+        const list = [];
+        files.forEach((item)=>{
+            if(item.match(regexp)){
+                item = item.replace(".js", "");
+                list.push(item)
+            }
+        });
+        console.log('List of forgescript tests:')
+        console.log(JSON.stringify(list, undefined, 2))
+    })
 }
 
 function testCall() {
-    const url = testUrlBuilder(args.serial, args.testname, API_URL)
+    const url = testUrlBuilder(args.serial, args.testname, API_URL_TEST)
     http.get(url, (resp, body) => {
         let data = '';
         // A chunk of data has been recieved.
