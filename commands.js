@@ -7,47 +7,46 @@ const args = yargs
         serial: {
             describe: 'Machine\'s serial number which against is going to be run the test',
             demand: true,
-            alias: 's'
+            alias: 's',
         },
         testname: {
             describe: 'Test name what is going to be run on the machine ',
             demand: true,
-            alias: 't'
-        }
+            alias: 't',
+        },
     }).command('list-tests', 'List available tests')
     .help()
     .argv;
 
-//run: 'node app.js --help' to see the commands
-//run: 'node app.js command-name' to see the command's help
+// run: 'node app.js --help' to see the commands
+// run: 'node app.js command-name' to see the command's help
 
 const command = args._[0];
 
-const API_URL_TEST = 'http://api.tripxpense.com/:testname/:serial'
+const API_URL_TEST = 'http://api.tripxpense.com/:testname/:serial';
 
-function testUrlBuilder(serial, testname, endpoint){
-    return endpoint.replace(":serial", serial).replace(":testname", testname);
+function testUrlBuilder(serial, testname, endpoint) {
+    return endpoint.replace(':serial', serial).replace(':testname', testname);
 }
 
 function listTests() {
-
     const testFolder = './tests/';
     fs.readdir(testFolder, (err, files) => {
-        var regexp = new RegExp("\.js+$", 'g');
+        const regexp = new RegExp('\.js+$', 'g');
         const list = [];
-        files.forEach((item)=>{
-            if(item.match(regexp)){
-                item = item.replace(".js", "");
-                list.push(item)
+        files.forEach((item) => {
+            if (item.match(regexp)) {
+                item = item.replace('.js', '');
+                list.push(item);
             }
         });
-        console.log('List of forgescript tests:')
-        console.log(JSON.stringify(list, undefined, 2))
-    })
+        console.log('List of forgescript tests:');
+        console.log(JSON.stringify(list, undefined, 2));
+    });
 }
 
 function testCall() {
-    const url = testUrlBuilder(args.serial, args.testname, API_URL_TEST)
+    const url = testUrlBuilder(args.serial, args.testname, API_URL_TEST);
     http.get(url, (resp, body) => {
         let data = '';
         // A chunk of data has been recieved.
@@ -59,17 +58,16 @@ function testCall() {
         resp.on('end', () => {
             console.log(JSON.parse(data));
         });
-
-    }).on("error", (err) => {
-        console.log("Error: " + err.message);
+    }).on('error', (err) => {
+        console.log(`Error: ${err.message}`);
     });
 }
 class CommandModule {
     constructor() {
         this.commands = {
-            "run-test": testCall,
-            "list-tests": listTests
-        }
+            'run-test': testCall,
+            'list-tests': listTests,
+        };
     }
     runCommand() {
         if (command && this.commands.hasOwnProperty(command)) {
@@ -79,6 +77,6 @@ class CommandModule {
 }
 
 module.exports = {
-    commandModule : new CommandModule(),
-    testUrlBuilder: testUrlBuilder
-}
+    commandModule: new CommandModule(),
+    testUrlBuilder,
+};
